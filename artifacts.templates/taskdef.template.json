@@ -1,0 +1,24 @@
+{
+  "executionRoleArn": "SED_EXEC_ROLE_ARN",
+  "containerDefinitions": [
+    {
+      "name": "SED_CONTAINER_NAME",
+      "image": "<IMAGE_TO_SET>",
+      "essential": true,
+      "cpu": 75,
+      "memory": 256,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "protocol": "tcp",
+          "containerPort": 80
+        }
+      ]
+    }
+  ],
+  "requiresCompatibilities": ["EC2"],
+  "networkMode": "awsvpc",
+  "cpu": "256",
+  "memory": "512",
+  "family": "SED_TASK_FAMILY"
+}
