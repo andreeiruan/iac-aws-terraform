@@ -6,7 +6,7 @@ resource "aws_subnet" "private_subnet_one" {
   availability_zone_id = data.aws_availability_zones.available.zone_ids[0]
 
   tags = {
-    Name = "${var.cluster_name}-private-subnet-one"
+    Name = "i-${var.env}-${var.infra_version}-private-subnet-one"
   }
 }
 
@@ -16,7 +16,7 @@ resource "aws_subnet" "private_subnet_two" {
   availability_zone_id = data.aws_availability_zones.available.zone_ids[1]
 
   tags = {
-    Name = "${var.cluster_name}-private-subnet-two"
+    Name = "i-${var.env}-${var.infra_version}-private-subnet-two"
   }
 }
 
@@ -44,7 +44,7 @@ resource "aws_network_acl" "private_acl" {
   }
 
   tags = {
-    Name = "${var.cluster_name}-private_acl"
+    Name = "i-${var.env}-${var.infra_version}-private_acl"
   }
 }
 
@@ -53,7 +53,7 @@ resource "aws_eip" "eip" {
   vpc        = true
 
   tags = {
-    Name = "${var.cluster_name}-eip-nat"
+    Name = "i-${var.env}-${var.infra_version}-eip-nat"
   }
 }
 
@@ -62,7 +62,7 @@ resource "aws_nat_gateway" "nat_gatewway" {
   allocation_id = aws_eip.eip.id
 
   tags = {
-    Name = "${var.cluster_name}-nat"
+    Name = "i-${var.env}-${var.infra_version}-nat"
   }
 }
 
@@ -75,7 +75,7 @@ resource "aws_route_table" "route_table_private" {
   }
 
   tags = {
-    Name = "${var.cluster_name}-private-route-table"
+    Name = "i-${var.env}-${var.infra_version}-private-route-table"
   }
 }
 

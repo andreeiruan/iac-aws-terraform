@@ -1,5 +1,5 @@
 resource "aws_codedeploy_app" "app" {
-  name             = "${var.service_name}-application"  
+  name             = "i-${var.env}-${var.infra_version}-${var.service_name}-${var.major_version}-application"  
   compute_platform = "ECS"
 }
 
@@ -7,7 +7,7 @@ resource "aws_codedeploy_deployment_config" "deploy_config" {
   depends_on = [
     aws_codedeploy_app.app
   ]
-  deployment_config_name = "${var.service_name}-deployment-config"
+  deployment_config_name = "i-${var.env}-${var.infra_version}-${var.service_name}-${var.major_version}-deployment-config"
   compute_platform       = "ECS"
 
   traffic_routing_config {
@@ -23,9 +23,9 @@ resource "aws_codedeploy_deployment_config" "deploy_config" {
 
 resource "aws_codedeploy_deployment_group" "deploy_group" {
   app_name              = aws_codedeploy_app.app.name
-  deployment_group_name = "${var.service_name}-deploy-group"
+  deployment_group_name = "i-${var.env}-${var.infra_version}-${var.service_name}-${var.major_version}-deploy-group"
 
-  service_role_arn = aws_iam_role.ecs_execution_role.arn
+  service_role_arn = aws_iam_role.code_deploy_role.arn
 
   auto_rollback_configuration {
     enabled = true
@@ -52,23 +52,24 @@ resource "aws_codedeploy_deployment_group" "deploy_group" {
 
   ecs_service {
     cluster_name = var.cluster_name
-    service_name = var.service_name
+    service_name = var.service_ecs_name
   }
 
   load_balancer_info {
     target_group_pair_info {
       prod_traffic_route {
-        listener_arns = var.use_https == true ? [var.blue_listener_https_arn] : [var.blue_listener_http_arn]
+        listener_arns = var.use_https == true ? [var.blue_listener_https_arn] : [var.blue_listener_http_arn]        
+      }
+
+
+      target_group {
+        name = data.aws_lb_target_group.target_green.name        
       }
 
       target_group {
         name = data.aws_lb_target_group.target_blue.name
       }
-
-      target_group {
-        name = data.aws_lb_target_group.target_green.name
-      }
-
+      
       test_traffic_route {
         listener_arns = [var.green_listener_http_arn]
       }

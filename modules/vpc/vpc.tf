@@ -5,12 +5,12 @@ resource "aws_vpc" "vpc" {
   enable_dns_support   = true
 
   tags = {
-    Name = "${var.cluster_name}-vpc"
+    Name = "i-${var.env}-${var.infra_version}-vpc"
   }
 }
 resource "aws_internet_gateway" "gw" {
   tags = {
-    Name = "${var.cluster_name}-ig-vpc"
+    Name = "i-${var.env}-${var.infra_version}-ig-vpc"
   }
 }
 
@@ -20,7 +20,7 @@ resource "aws_internet_gateway_attachment" "gw" {
 }
 
 resource "aws_security_group" "allow_internal_access" {
-  name        = "${var.cluster_name}-allow-iternal-access"
+  name        = "i-${var.env}-${var.infra_version}-allow-iternal-access"
   description = "Enables access to all VPC protocols and IPs"
   vpc_id      = aws_vpc.vpc.id
 

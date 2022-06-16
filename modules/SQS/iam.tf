@@ -28,11 +28,11 @@ data "aws_iam_policy_document" "pusher" {
 }
 
 resource "aws_iam_policy" "consumer" {
-  name   = "sqs-${var.queue_name}-consumer"
+  name   = "i-${var.env}-${var.infra_version}-consumer"
   policy = data.aws_iam_policy_document.consumer.json
 }
 
 resource "aws_iam_policy" "pusher" {
-  name   = "sqs-${var.queue_name}-pusher"
+  name   = "i-${var.env}-${var.infra_version}-pusher"
   policy = data.aws_iam_policy_document.pusher.json
 }

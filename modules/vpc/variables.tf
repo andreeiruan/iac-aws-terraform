@@ -1,7 +1,3 @@
-variable "cluster_name" {
-  type = string
-}
-
 variable "cidr_ip" {
   type    = string
   default = "10.10.0.0"
@@ -32,3 +28,12 @@ variable "rules_ingress_public_acl" {
     },
   ]
 }
+
+variable "env" {
+  
+}
+
+variable "infra_version" {
+  
+}
+

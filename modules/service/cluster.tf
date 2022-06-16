@@ -1,5 +1,5 @@
 resource "aws_ecs_cluster" "cluster" {
-  name = var.cluster_name
+  name = "i-${var.env}-${var.infra_version}-${var.service_name}-${var.major_version}"
 
   setting {
     name  = "containerInsights"
@@ -7,8 +7,8 @@ resource "aws_ecs_cluster" "cluster" {
   }
 }
 
-resource "aws_ecs_capacity_provider" "capacity" {
-  name = "${var.cluster_name}-cp"
+resource "aws_ecs_capacity_provider" "capacity" { 
+  name = "i-${var.env}-${var.infra_version}-${var.service_name}-${var.major_version}-cp"
 
   auto_scaling_group_provider {
     auto_scaling_group_arn         = aws_autoscaling_group.autoscaling_group.arn

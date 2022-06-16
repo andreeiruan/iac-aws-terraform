@@ -1,5 +1,3 @@
-variable "cluster_name" {}
-
 variable "keypair_name" {}
 
 variable "ecs_image_id" {}
@@ -22,6 +20,18 @@ variable "vpc_id" {}
 
 variable "ecs_node_volume_size" {
   type = number
+}
+
+variable "env" {
+  
+}
+
+variable "infra_version" {
+  
+}
+
+variable "major_version" {
+  
 }
 
 #TASK
@@ -56,4 +66,12 @@ variable "service_name" {
 
 variable "private_subnets" {
   type = list(string)
+}
+
+variable "docker_image_local" {
+  type = string
+}
+
+variable "docker_image_tag" {
+  type = string
 }

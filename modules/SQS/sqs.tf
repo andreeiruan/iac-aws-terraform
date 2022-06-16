@@ -7,7 +7,7 @@ locals {
 
 resource "aws_sqs_queue" "queue_deadletter" {
   count                      = var.is_dead_letter_queue ? 1 : 0
-  name                       = "${var.queue_name}_deadletter"
+  name                       = "i-${var.env}-${var.infra_version}-deadletter"
   delay_seconds              = var.delay_seconds
   max_message_size           = var.max_message_size
   message_retention_seconds  = var.message_retention_seconds
@@ -16,7 +16,7 @@ resource "aws_sqs_queue" "queue_deadletter" {
 }
 
 resource "aws_sqs_queue" "queue" {
-  name                       = var.queue_name
+  name                       = "i-${var.env}-${var.infra_version}"
   delay_seconds              = var.delay_seconds
   max_message_size           = var.max_message_size
   message_retention_seconds  = var.message_retention_seconds

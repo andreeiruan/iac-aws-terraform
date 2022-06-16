@@ -1,19 +1,15 @@
-# output "default_target" {
-#   value = ""
-# }
+output "target_blue_arn" {
+  value = aws_lb_target_group.target_blue.arn
+}
 
-# output "certificate_arn" {
-#   value = aws_acm_certificate.certificate_manager.arn
-# }
+output "target_green_arn" {
+  value = aws_lb_target_group.target_green.arn
+}
 
-# output "alb_arn" {
-#   value = aws_lb.public_alb.arn
-# }
+output "blue_listener_protocol_arn" {
+  value = aws_lb_listener.blue_listener_protocol_http.arn 
+}
 
-# output "listener_arn" {
-#   value = var.load_balancer_type == "application" ? aws_lb_listener.public_listener_alb_https[0].arn : ""
-# }
-
-# output "alb_dns" {
-#   value = aws_lb.public_alb.dns_name
-# }
+output "green_listener_http_arn" {
+  value = aws_lb_listener.green_listener_http.arn
+}

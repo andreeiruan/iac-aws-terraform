@@ -1,5 +1,5 @@
 resource "aws_security_group" "alb_security_group" {
-  name        = "${var.cluster_name}-allow-web-server"
+  name        = "i-${var.env}-${var.infra_version}-${var.service_name}-${var.major_version}-allow-web-server"
   description = "Enables access to all IPs"
   vpc_id      = var.vpc_id
 
@@ -23,7 +23,7 @@ resource "aws_security_group" "alb_security_group" {
 }
 
 resource "aws_lb" "public_alb" {
-  name               = "public-alb-${var.cluster_name}"
+  name               = "i-${var.service_name}-${var.major_version}-alb"
   load_balancer_type = "application"
   subnets            = var.public_subnets
   security_groups    = [aws_security_group.alb_security_group.id, var.security_group_internal_id]

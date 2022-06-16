@@ -1,8 +1,3 @@
-variable "queue_name" {
-  type        = string
-  description = "The SQS queue name"
-}
-
 variable "visibility_timeout_seconds" {
   type        = number
   default     = 10
@@ -48,4 +43,12 @@ variable "tags" {
   type        = map(string)
   default     = {}
   description = "A map of tags to assign to the queue"
+}
+
+variable "env" {
+  
+}
+
+variable "infra_version" {
+  
 }

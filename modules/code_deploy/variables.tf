@@ -1,7 +1,3 @@
-variable "cluster_name" {}
-
-variable "service_name" {}
-
 variable "canary_interval" {}
 
 variable "canary_percentage" {}
@@ -22,6 +18,34 @@ variable "ecr_repository_name" {}
 
 variable "use_https" {}
 
+variable "env" {
+  
+}
+
+variable "infra_version" {
+  
+}
+
+variable "service_name" {
+  
+}
+
+variable "major_version" {
+  
+}
+
+variable "service_ecs_name" {
+  
+}
+
+variable "cluster_name" {
+  
+}
+
 variable "codecommit_repository_name" {}
 
-variable "pipeline_bucket_name" {}
+variable "task_family" {}
+
+variable "container_name" {}
+
+variable "exec_task_role_arn" {}

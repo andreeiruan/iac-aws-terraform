@@ -1,9 +1,12 @@
 resource "aws_codepipeline" "codepipeline" {
-  name     = "${var.service_name}-cp"
+  depends_on = [
+    aws_s3_bucket.codepipeline_bucket
+  ]
+  name     = "i-${var.env}-${var.infra_version}-${var.service_name}-${var.major_version}-cp"
   role_arn = aws_iam_role.pipeline.arn  
 
   artifact_store {
-    location = data.aws_s3_bucket.codepipeline_bucket.id
+    location = aws_s3_bucket.codepipeline_bucket.id
     type     = "S3"
   }
 
@@ -67,7 +70,7 @@ resource "aws_codepipeline" "codepipeline" {
         AppSpecTemplateArtifact        = "SourceArtifact"
         AppSpecTemplatePath            = "appspec.yaml"
         ApplicationName                = aws_codedeploy_app.app.name
-        DeploymentGroupName            = aws_codedeploy_deployment_group.deploy_group.deployment_config_name
+        DeploymentGroupName            = "i-${var.env}-${var.infra_version}-${var.service_name}-${var.major_version}-deploy-group"
         Image1ArtifactName             = "Image"
         Image1ContainerName            = "IMAGE_TO_SET"
         TaskDefinitionTemplateArtifact = "SourceArtifact"
@@ -79,7 +82,7 @@ resource "aws_codepipeline" "codepipeline" {
 
 
 resource "aws_cloudwatch_event_rule" "CWE_event_rule" {
-  name        = "${var.service_name}-pipeline-event-rule"
+  name        = "i-${var.env}-${var.infra_version}-${var.service_name}-${var.major_version}-pipeline-event-rule"
   description = "Triggers pipeline on ecr image push"
   is_enabled  = true
   role_arn    = aws_iam_role.CWE.arn

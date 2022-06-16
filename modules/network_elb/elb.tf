@@ -1,5 +1,5 @@
 resource "aws_lb_target_group" "network_elb_default_target_group" {
-  name     = "network-tg-${var.cluster_name}-default"
+  name     = "i-${var.service_name}-${var.major_version}-default"
   vpc_id   = data.aws_vpc.vpc.id
   port     = 80
   protocol = "TCP"
@@ -13,7 +13,7 @@ resource "aws_lb_target_group" "network_elb_default_target_group" {
 }
 
 resource "aws_lb" "network_elb" {
-  name                             = "network-lb${var.cluster_name}"
+  name                             = "i-${var.service_name}-${var.major_version}-network"
   load_balancer_type               = "network"
   subnets                          = var.private_subnets
   internal                         = true

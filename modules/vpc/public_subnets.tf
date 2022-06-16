@@ -4,7 +4,7 @@ resource "aws_subnet" "public_subnet_one" {
   availability_zone_id = data.aws_availability_zones.available.zone_ids[0]
 
   tags = {
-    Name = "${var.cluster_name}-public-subnet-one"
+    Name = "i-${var.env}-${var.infra_version}-public-subnet-one"
   }
 }
 
@@ -14,7 +14,7 @@ resource "aws_subnet" "public_subnet_two" {
   availability_zone_id = data.aws_availability_zones.available.zone_ids[1]
 
   tags = {
-    Name = "${var.cluster_name}-public-subnet-two"
+    Name = "i-${var.env}-${var.infra_version}-public-subnet-two"
   }
 }
 
@@ -53,7 +53,7 @@ resource "aws_network_acl" "public_acl" {
   }
 
   tags = {
-    Name = "${var.cluster_name}-public_acl"
+    Name = "i-${var.env}-${var.infra_version}-public_acl"
   }
 }
 
@@ -66,7 +66,7 @@ resource "aws_route_table" "route_table_public" {
   }
 
   tags = {
-    Name = "${var.cluster_name}-public-route-table"
+    Name = "i-${var.env}-${var.infra_version}-public-route-table"
   }
 }
 

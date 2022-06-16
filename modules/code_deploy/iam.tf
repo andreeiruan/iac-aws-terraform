@@ -1,5 +1,25 @@
 resource "aws_iam_role" "ecs_execution_role" {
-  name = "${var.service_name}-execution-role"
+  name = "i-${var.env}-${var.infra_version}-${var.service_name}-${var.major_version}-execution-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Sid    = ""
+        Principal = {
+          Service = "codedeploy.amazonaws.com"
+        }
+      },
+    ]
+  })
+
+  managed_policy_arns = ["arn:aws:iam::aws:policy/AWSCodeDeployRoleForECS"]
+}
+
+resource "aws_iam_role" "code_deploy_role" {
+  name = "i-${var.env}-${var.infra_version}-${var.service_name}-${var.major_version}-code-deploy-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -19,7 +39,7 @@ resource "aws_iam_role" "ecs_execution_role" {
 }
 
 resource "aws_iam_role" "CWE" {
-  name = "${var.service_name}-cwe-role"
+  name = "i-${var.env}-${var.infra_version}-${var.service_name}-${var.major_version}-cwe-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -36,7 +56,7 @@ resource "aws_iam_role" "CWE" {
   })
 
  inline_policy {
-    name = "${var.service_name}-cwe-exec-policy"
+    name = "i-${var.env}-${var.infra_version}-${var.service_name}-${var.major_version}-cwe-exec-policy"
 
     policy = jsonencode({
       Version = "2012-10-17"
@@ -81,14 +101,7 @@ resource "aws_iam_role_policy" "pipeline" {
             "Sid": "",
             "Effect": "Allow",
             "Action": [
-                "codecommit:UploadArchive",
-                "codecommit:GetUploadArchiveStatus",
-                "codecommit:GetCommit",
-                "codecommit:GetBranch",
-                "codecommit:CancelUploadArchive",
-                "codebuild:StartBuild",
-                "codebuild:BatchGetBuilds",
-                "codestar-connections:*"
+                "*"
             ],
             "Resource": "*"
         },
@@ -98,9 +111,11 @@ resource "aws_iam_role_policy" "pipeline" {
             "Action": [
                 "s3:*"
             ],
-            "Resource": "${data.aws_s3_bucket.codepipeline_bucket.arn}/*"
+            "Resource": "${aws_s3_bucket.codepipeline_bucket.arn}/*"
         }
   ]
 }
 POLICY
 }
+
+

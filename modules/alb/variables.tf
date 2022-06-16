@@ -1,5 +1,17 @@
-variable "cluster_name" {
-  type = string
+variable "env" {
+  
+}
+
+variable "infra_version" {
+  
+}
+
+variable "service_name" {
+  
+}
+
+variable "major_version" {
+  
 }
 
 variable "vpc_id" {
@@ -11,10 +23,6 @@ variable "public_subnets" {
 }
 
 variable "hosted_zone_domain" {
-  type = string
-}
-
-variable "domain_name_certifate" {
   type = string
 }
 

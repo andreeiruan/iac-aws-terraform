@@ -3,7 +3,7 @@ output "codecommit_repository_name" {
 }
 
 output "exec_task_role_arn" {
-  value = aws_iam_role.ecs_role.arn
+  value = aws_iam_role.ecs_execution_role.arn
 }
 
 output "container_name" {
@@ -24,4 +24,12 @@ output "ecr_repository_uri" {
 
 output "ecr_registry_id" {
   value = aws_ecr_repository.repository.registry_id
+}
+
+output "cluster_name" {
+  value = aws_ecs_cluster.cluster.name
+}
+
+output "service_ecs_name" {
+  value = aws_ecs_service.service.name
 }

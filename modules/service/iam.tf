@@ -21,26 +21,26 @@ data "aws_iam_policy_document" "ec2_assume_role" {
 }
 
 resource "aws_iam_role" "ec2_role" {
-  name                = "${var.cluster_name}__EC2_Role"
+  name                = "i-${var.env}-${var.infra_version}-${var.service_name}-${var.major_version}-ec2-role"
   path                = "/"
   assume_role_policy  = data.aws_iam_policy_document.ec2_assume_role.json
   managed_policy_arns = ["arn:aws:iam::aws:policy/AdministratorAccess"]
 }
 
 resource "aws_iam_role" "ecs_role" {
-  name                = "${var.cluster_name}__ECS_Role"
+  name                = "i-${var.env}-${var.infra_version}-${var.service_name}-${var.major_version}-ecs-role"
   path                = "/"
   assume_role_policy  = data.aws_iam_policy_document.ecs_assume_role_policy.json
   managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceRole"]
 }
 
 resource "aws_iam_instance_profile" "instance_profile" {
-  name = "${var.cluster_name}_instance_profile"
+  name = "i-${var.env}-${var.infra_version}-${var.service_name}-${var.major_version}-instance-profile"
   role = aws_iam_role.ec2_role.name
 }
 
 resource "aws_iam_instance_profile" "ecs_instance_profile" {
-  name = "${var.cluster_name}_ecs_instance_profile"
+  name = "i-${var.env}-${var.infra_version}-${var.service_name}-${var.major_version}-ecs-instance-profile"
   role = aws_iam_role.ecs_role.name
 }
 
