@@ -76,6 +76,12 @@ resource "aws_ecs_service" "service" {
   # wait_for_steady_state = true  
   # launch_type           = "EC2"
 
+  # lifecycle {
+  #   ignore_changes = [
+  #     task_definition
+  #   ]
+  # }
+
   deployment_controller {
     type = "CODE_DEPLOY"
   }

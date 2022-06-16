@@ -1,7 +1,11 @@
 resource "aws_codepipeline" "codepipeline" {
   depends_on = [
-    aws_s3_bucket.codepipeline_bucket
+    aws_s3_bucket.codepipeline_bucket,
+    aws_iam_role.pipeline,
+    aws_codedeploy_app.app,
+    aws_codedeploy_deployment_group.deploy_group    
   ]
+
   name     = "i-${var.env}-${var.infra_version}-${var.service_name}-${var.major_version}-cp"
   role_arn = aws_iam_role.pipeline.arn  
 

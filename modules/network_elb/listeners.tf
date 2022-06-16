@@ -1,8 +1,7 @@
-resource "aws_lb_listener" "blue_listener_protocol_http" {
-  count             = var.use_https ? 0 : 1
-  load_balancer_arn = aws_lb.public_alb.arn
+resource "aws_lb_listener" "blue_listener_protocol_http" {  
+  load_balancer_arn = aws_lb.network_elb.arn
   port              = 80
-  protocol          = "HTTP"
+  protocol          = "TCP"
 
   default_action {
     type             = "forward"
@@ -11,9 +10,9 @@ resource "aws_lb_listener" "blue_listener_protocol_http" {
 }
 
 resource "aws_lb_listener" "green_listener_http" {
-  load_balancer_arn = aws_lb.public_alb.arn
+  load_balancer_arn = aws_lb.network_elb.arn
   port              = var.green_port
-  protocol          = "HTTP"
+  protocol          = "TCP"
 
   default_action {
     type             = "forward"

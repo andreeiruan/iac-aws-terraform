@@ -2,7 +2,9 @@ variable "canary_interval" {}
 
 variable "canary_percentage" {}
 
-variable "blue_listener_https_arn" {}
+variable "blue_listener_https_arn" {
+  default = ""
+}
 
 variable "blue_listener_http_arn" {}
 
@@ -49,3 +51,7 @@ variable "task_family" {}
 variable "container_name" {}
 
 variable "exec_task_role_arn" {}
+
+variable "networw_lb" {
+  default = false
+}

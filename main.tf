@@ -20,16 +20,6 @@ module "alb" {
   subdomain                  = "nginx-test.test-codox"
 }
 
-module "newtwork_lb" {
-  source          = "./modules/network_elb"
-  vpc_id          = module.vpc.vpc_id
-  private_subnets = [module.vpc.subnet_private_one_id, module.vpc.subnet_private_two_id]
-  env             = var.env
-  infra_version   = var.infra_version
-  major_version   = var.major_version
-  service_name    = var.service_name
-}
-
 module "sqs_queue" {
   source               = "./modules/SQS"
   is_dead_letter_queue = true
@@ -98,7 +88,35 @@ module "code_deploy" {
   green_listener_http_arn    = module.alb.green_listener_http_arn
   ecr_repository_name        = module.service.ecr_repository_name
   use_https                  = var.use_https
-  codecommit_repository_name = module.service.codecommit_repository_name  
+  codecommit_repository_name = module.service.codecommit_repository_name
+}
+
+# module "newtwork_lb" {
+#   source          = "./modules/network_elb"
+#   vpc_id          = module.vpc.vpc_id
+#   private_subnets = [module.vpc.subnet_private_one_id, module.vpc.subnet_private_two_id]
+#   env             = var.env
+#   infra_version   = var.infra_version
+#   major_version   = var.major_version
+#   service_name    = "${var.service_name}-pv"
+#   blue_port       = var.blue_port
+#   green_port      = var.green_port
+# }
+
+module "alb_two" {
+  source                     = "./modules/alb"
+  env                        = var.env
+  infra_version              = var.infra_version
+  major_version              = var.major_version
+  service_name               = var.service_name
+  vpc_id                     = module.vpc.vpc_id
+  public_subnets             = [module.vpc.subnet_public_one_id, module.vpc.subnet_public_two_id]
+  hosted_zone_domain         = "dev.ezops.com.br"
+  security_group_internal_id = module.vpc.sg_allow_internal_access_id
+  blue_port                  = var.blue_port
+  green_port                 = var.green_port
+  use_https                  = var.use_https
+  subdomain                  = "nginx-test.test-codox"
 }
 
 module "service_private" {
@@ -110,7 +128,7 @@ module "service_private" {
   asg_min_instances       = 1
   asg_desired_instances   = 1
   asg_max_instances       = 3
-  target_blue_arn         = module.newtwork_lb.target_blue_arn
+  target_blue_arn         = module.alb_two.target_blue_arn
   private_subnets         = [module.vpc.subnet_private_one_id, module.vpc.subnet_private_two_id]
   public_subnet           = module.vpc.subnet_public_one_id
   vpc_id                  = module.vpc.vpc_id
@@ -126,18 +144,18 @@ module "service_private" {
   env                     = var.env
   infra_version           = var.infra_version
   major_version           = var.major_version
-  service_name            = "${var.service_name}-private}"
+  service_name            = "${var.service_name}-two"
 }
 
 module "code_deploy_private" {
   source = "./modules/code_deploy"
   depends_on = [
-    module.service
+    module.service_private
   ]
   env                        = var.env
   infra_version              = var.infra_version
   major_version              = var.major_version
-  service_name               = "${var.service_name}-private}"
+  service_name               = "${var.service_name}-two"
   service_ecs_name           = module.service_private.service_ecs_name
   cluster_name               = module.service_private.cluster_name
   container_name             = module.service_private.container_name
@@ -146,13 +164,13 @@ module "code_deploy_private" {
   canary_interval            = 10
   canary_percentage          = 50
   canary_cleanup_timeout     = 10
-  target_blue_arn            = module.alb.target_blue_arn
-  target_green_arn           = module.alb.target_green_arn
-  blue_listener_http_arn     = module.alb.blue_listener_protocol_arn
-  # blue_listener_https_arn    = module.alb.blue_listener_https_arn
-  green_listener_http_arn    = module.alb.green_listener_http_arn
-  ecr_repository_name        = module.service.ecr_repository_name
-  use_https                  = false
-  codecommit_repository_name = module.service.codecommit_repository_name  
+  target_blue_arn            = module.alb_two.target_blue_arn
+  target_green_arn           = module.alb_two.target_green_arn
+  blue_listener_http_arn     = module.alb_two.blue_listener_protocol_arn
+  # networw_lb                 = true
+  green_listener_http_arn    = module.alb_two.green_listener_http_arn
+  ecr_repository_name        = module.service_private.ecr_repository_name
+  use_https                  = true
+  codecommit_repository_name = module.service_private.codecommit_repository_name
 }
 

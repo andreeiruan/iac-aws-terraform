@@ -1,5 +1,5 @@
-resource "aws_codedeploy_app" "app" {
-  name             = "i-${var.env}-${var.infra_version}-${var.service_name}-${var.major_version}-application"  
+resource "aws_codedeploy_app" "app" {  
+  name             = "i-${var.env}-${var.infra_version}-${var.service_name}-${var.major_version}-application"
   compute_platform = "ECS"
 }
 
@@ -22,8 +22,14 @@ resource "aws_codedeploy_deployment_config" "deploy_config" {
 }
 
 resource "aws_codedeploy_deployment_group" "deploy_group" {
+  depends_on = [
+    aws_iam_role.code_deploy_role,
+    aws_codedeploy_app.app,
+    aws_codedeploy_deployment_config.deploy_config
+  ]
   app_name              = aws_codedeploy_app.app.name
   deployment_group_name = "i-${var.env}-${var.infra_version}-${var.service_name}-${var.major_version}-deploy-group"
+
 
   service_role_arn = aws_iam_role.code_deploy_role.arn
 
@@ -43,7 +49,7 @@ resource "aws_codedeploy_deployment_group" "deploy_group" {
     }
   }
 
-  deployment_config_name = aws_codedeploy_deployment_config.deploy_config.deployment_config_name
+  deployment_config_name = var.networw_lb != true ? aws_codedeploy_deployment_config.deploy_config.deployment_config_name : "CodeDeployDefault.ECSAllAtOnce"
 
   deployment_style {
     deployment_option = "WITH_TRAFFIC_CONTROL"
@@ -58,23 +64,23 @@ resource "aws_codedeploy_deployment_group" "deploy_group" {
   load_balancer_info {
     target_group_pair_info {
       prod_traffic_route {
-        listener_arns = var.use_https == true ? [var.blue_listener_https_arn] : [var.blue_listener_http_arn]        
+        listener_arns = var.use_https == true ? [var.blue_listener_https_arn] : [var.blue_listener_http_arn]
       }
 
 
       target_group {
-        name = data.aws_lb_target_group.target_green.name        
+        name = data.aws_lb_target_group.target_green.name
       }
 
       target_group {
         name = data.aws_lb_target_group.target_blue.name
       }
-      
+
       test_traffic_route {
         listener_arns = [var.green_listener_http_arn]
       }
     }
 
-  
+
   }
 }

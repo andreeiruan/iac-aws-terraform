@@ -23,3 +23,7 @@ variable "major_version" {
 variable "service_name" {
   
 }
+
+variable "blue_port" {}
+
+variable "green_port" {}
