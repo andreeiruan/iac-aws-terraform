@@ -64,7 +64,7 @@ resource "aws_codedeploy_deployment_group" "deploy_group" {
   load_balancer_info {
     target_group_pair_info {
       prod_traffic_route {
-        listener_arns = var.use_https == true ? [var.blue_listener_https_arn] : [var.blue_listener_http_arn]
+        listener_arns = var.use_https == true ? [var.listener_https] : [var.listener_https]
       }
 
 
@@ -76,9 +76,9 @@ resource "aws_codedeploy_deployment_group" "deploy_group" {
         name = data.aws_lb_target_group.target_blue.name
       }
 
-      test_traffic_route {
-        listener_arns = [var.green_listener_http_arn]
-      }
+      # test_traffic_route {
+      #   listener_arns = [var.listener_https]
+      # }
     }
 
 

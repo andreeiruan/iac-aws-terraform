@@ -5,6 +5,7 @@ resource "aws_launch_configuration" "as_conf" {
   security_groups             = [var.security_group_internal]
   instance_type               = var.instance_type
   associate_public_ip_address = false
+  name                        = "i-${var.env}-${var.infra_version}-${var.service_name}-${var.major_version}-lc"
 
   root_block_device {
     volume_size = var.ecs_node_volume_size
@@ -43,6 +44,7 @@ resource "aws_autoscaling_group" "autoscaling_group" {
   desired_capacity     = var.asg_desired_instances
   max_size             = var.asg_max_instances
   vpc_zone_identifier  = var.private_subnets
+  name                 = "i-${var.env}-${var.infra_version}-${var.service_name}-${var.major_version}-ag"
 
   tag {
     key                 = "Name"

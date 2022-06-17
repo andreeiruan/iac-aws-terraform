@@ -14,10 +14,11 @@ module "alb" {
   public_subnets             = [module.vpc.subnet_public_one_id, module.vpc.subnet_public_two_id]
   hosted_zone_domain         = "dev.ezops.com.br"
   security_group_internal_id = module.vpc.sg_allow_internal_access_id
-  blue_port                  = var.blue_port
-  green_port                 = var.green_port
+  blue_port                  = 3000
+  green_port                 = 4000
   use_https                  = var.use_https
-  subdomain                  = "nginx-test.test-codox"
+  subdomain                  = "producer.test-codox"
+  site_priority              = 1
 }
 
 module "sqs_queue" {
@@ -53,11 +54,11 @@ module "service" {
   memory_task             = 512
   cpu_container           = 75
   memory_container        = 256
-  blue_port               = var.blue_port
-  green_port              = var.green_port
+  blue_port               = 3000
+  green_port              = 4000
   ecs_node_volume_size    = 30
-  docker_image_local      = var.docker_image_local
-  docker_image_tag        = var.docker_image_tag
+  docker_image_local      = "sqsproducer"
+  docker_image_tag        = "latest"
   env                     = var.env
   infra_version           = var.infra_version
   major_version           = var.major_version
@@ -69,23 +70,24 @@ module "code_deploy" {
   depends_on = [
     module.service
   ]
-  env                        = var.env
-  infra_version              = var.infra_version
-  major_version              = var.major_version
-  service_name               = var.service_name
-  service_ecs_name           = module.service.service_ecs_name
-  cluster_name               = module.service.cluster_name
-  container_name             = module.service.container_name
-  exec_task_role_arn         = module.service.exec_task_role_arn
-  task_family                = module.service.task_family
-  canary_interval            = 10
-  canary_percentage          = 50
-  canary_cleanup_timeout     = 10
-  target_blue_arn            = module.alb.target_blue_arn
-  target_green_arn           = module.alb.target_green_arn
-  blue_listener_http_arn     = module.alb.blue_listener_protocol_arn
-  blue_listener_https_arn    = module.alb.blue_listener_https_arn
-  green_listener_http_arn    = module.alb.green_listener_http_arn
+  env                    = var.env
+  infra_version          = var.infra_version
+  major_version          = var.major_version
+  service_name           = var.service_name
+  service_ecs_name       = module.service.service_ecs_name
+  cluster_name           = module.service.cluster_name
+  container_name         = module.service.container_name
+  exec_task_role_arn     = module.service.exec_task_role_arn
+  task_family            = module.service.task_family
+  canary_interval        = 10
+  canary_percentage      = 50
+  canary_cleanup_timeout = 10
+  target_blue_arn        = module.alb.target_blue_arn
+  target_green_arn       = module.alb.target_green_arn
+  listener_https         = module.alb.listener_https
+  # blue_listener_http_arn     = module.alb.blue_listener_protocol_arn
+  # blue_listener_https_arn    = module.alb.blue_listener_https_arn
+  # green_listener_http_arn    = module.alb.green_listener_http_arn
   ecr_repository_name        = module.service.ecr_repository_name
   use_https                  = var.use_https
   codecommit_repository_name = module.service.codecommit_repository_name
@@ -108,15 +110,16 @@ module "alb_two" {
   env                        = var.env
   infra_version              = var.infra_version
   major_version              = var.major_version
-  service_name               = var.service_name
+  service_name               = "${var.service_name}-pv"
   vpc_id                     = module.vpc.vpc_id
   public_subnets             = [module.vpc.subnet_public_one_id, module.vpc.subnet_public_two_id]
   hosted_zone_domain         = "dev.ezops.com.br"
   security_group_internal_id = module.vpc.sg_allow_internal_access_id
-  blue_port                  = var.blue_port
-  green_port                 = var.green_port
+  blue_port                  = 4000
+  green_port                 = 3000
   use_https                  = var.use_https
-  subdomain                  = "nginx-test.test-codox"
+  site_priority              = 2
+  subdomain                  = "consumer.test-codox"
 }
 
 module "service_private" {
@@ -136,11 +139,11 @@ module "service_private" {
   memory_task             = 512
   cpu_container           = 75
   memory_container        = 256
-  blue_port               = var.blue_port
-  green_port              = var.green_port
+  blue_port               = 4000
+  green_port              = 3000
   ecs_node_volume_size    = 30
-  docker_image_local      = var.docker_image_local
-  docker_image_tag        = var.docker_image_tag
+  docker_image_local      = "sqsconsumer"
+  docker_image_tag        = "latest"
   env                     = var.env
   infra_version           = var.infra_version
   major_version           = var.major_version
@@ -152,23 +155,24 @@ module "code_deploy_private" {
   depends_on = [
     module.service_private
   ]
-  env                        = var.env
-  infra_version              = var.infra_version
-  major_version              = var.major_version
-  service_name               = "${var.service_name}-two"
-  service_ecs_name           = module.service_private.service_ecs_name
-  cluster_name               = module.service_private.cluster_name
-  container_name             = module.service_private.container_name
-  exec_task_role_arn         = module.service_private.exec_task_role_arn
-  task_family                = module.service_private.task_family
-  canary_interval            = 10
-  canary_percentage          = 50
-  canary_cleanup_timeout     = 10
-  target_blue_arn            = module.alb_two.target_blue_arn
-  target_green_arn           = module.alb_two.target_green_arn
-  blue_listener_http_arn     = module.alb_two.blue_listener_protocol_arn
+  env                    = var.env
+  infra_version          = var.infra_version
+  major_version          = var.major_version
+  service_name           = "${var.service_name}-two"
+  service_ecs_name       = module.service_private.service_ecs_name
+  cluster_name           = module.service_private.cluster_name
+  container_name         = module.service_private.container_name
+  exec_task_role_arn     = module.service_private.exec_task_role_arn
+  task_family            = module.service_private.task_family
+  canary_interval        = 10
+  canary_percentage      = 50
+  canary_cleanup_timeout = 10
+  target_blue_arn        = module.alb_two.target_blue_arn
+  target_green_arn       = module.alb_two.target_green_arn
+  # blue_listener_http_arn = module.alb_two.blue_listener_protocol_arn
   # networw_lb                 = true
-  green_listener_http_arn    = module.alb_two.green_listener_http_arn
+  # green_listener_http_arn    = module.alb_two.green_listener_http_arn
+  listener_https             = module.alb_two.listener_https
   ecr_repository_name        = module.service_private.ecr_repository_name
   use_https                  = true
   codecommit_repository_name = module.service_private.codecommit_repository_name

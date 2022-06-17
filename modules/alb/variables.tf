@@ -14,6 +14,10 @@ variable "major_version" {
   
 }
 
+variable "site_priority" {
+  
+}
+
 variable "vpc_id" {
   type = string
 }
