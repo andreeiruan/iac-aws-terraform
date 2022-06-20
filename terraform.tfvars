@@ -1,4 +1,4 @@
-region             = "us-west-1"
+region             = "us-east-1"
 blue_port          = 80
 green_port         = 8080
 use_https          = true
