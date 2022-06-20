@@ -34,6 +34,10 @@ variable "major_version" {
   
 }
 
+variable "queue_url" {
+  
+}
+
 #TASK
 variable "memory_task" {
   type = number

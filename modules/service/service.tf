@@ -11,7 +11,7 @@ resource "aws_codecommit_repository" "artifact_store" {
 
 
   provisioner "local-exec" {
-    command = "/bin/sh -c ./scripts/push-docker-local-image.sh"    
+    command = "/bin/sh -c ./scripts/push-docker-local-image.sh"
 
     environment = {
       AWS_REGION         = data.aws_region.current.name
@@ -64,15 +64,22 @@ resource "aws_ecs_task_definition" "task" {
       }
     }
 
+    environment = [
+      {
+        name  = "QUEUE_URL",
+        value = var.queue_url
+      }
+    ]
+
   }])
 }
 
 resource "aws_ecs_service" "service" {
-  name                  = "i-${var.env}-${var.infra_version}-${var.service_name}-${var.major_version}"
-  cluster               = aws_ecs_cluster.cluster.id
-  task_definition       = aws_ecs_task_definition.task.arn
-  desired_count         = 1
-  scheduling_strategy   = "REPLICA"
+  name                = "i-${var.env}-${var.infra_version}-${var.service_name}-${var.major_version}"
+  cluster             = aws_ecs_cluster.cluster.id
+  task_definition     = aws_ecs_task_definition.task.arn
+  desired_count       = 1
+  scheduling_strategy = "REPLICA"
   # wait_for_steady_state = true  
   # launch_type           = "EC2"
 

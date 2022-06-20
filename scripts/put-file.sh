@@ -1,4 +1,6 @@
 #!/bin/bash
+set -x
+
 cp  $PWD/artifacts.templates/appspec.template.yaml $PWD/artifacts.templates/appspec.yaml
 cp  $PWD/artifacts.templates/taskdef.template.json $PWD/artifacts.templates/taskdef.json
 

@@ -8,16 +8,18 @@ resource "aws_vpc" "vpc" {
     Name = "i-${var.env}-${var.infra_version}-vpc"
   }
 }
+
 resource "aws_internet_gateway" "gw" {
+  vpc_id = aws_vpc.vpc.id
   tags = {
     Name = "i-${var.env}-${var.infra_version}-ig-vpc"
   }
 }
 
-resource "aws_internet_gateway_attachment" "gw" {
-  internet_gateway_id = aws_internet_gateway.gw.id
-  vpc_id              = aws_vpc.vpc.id
-}
+# resource "aws_internet_gateway_attachment" "gw" {
+#   internet_gateway_id = aws_internet_gateway.gw.id
+#   vpc_id              = aws_vpc.vpc.id
+# }
 
 resource "aws_security_group" "allow_internal_access" {
   name        = "i-${var.env}-${var.infra_version}-allow-iternal-access"

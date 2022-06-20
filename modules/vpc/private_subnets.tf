@@ -1,5 +1,3 @@
-
-
 resource "aws_subnet" "private_subnet_one" {
   vpc_id               = aws_vpc.vpc.id
   cidr_block           = "${var.ips_subnets[2]}/24"
@@ -59,7 +57,7 @@ resource "aws_eip" "eip" {
 
 resource "aws_nat_gateway" "nat_gatewway" {
   subnet_id     = aws_subnet.public_subnet_one.id
-  allocation_id = aws_eip.eip.id
+  allocation_id = aws_eip.eip.id  
 
   tags = {
     Name = "i-${var.env}-${var.infra_version}-nat"

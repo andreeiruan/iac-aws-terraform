@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 
 # OBJECTS="$(aws s3api list-object-versions  --bucket "${BUCKET_NAME}" --output=json  --query='{Objects: Versions[].{Key:Key,VersionId:VersionId}}')"
 

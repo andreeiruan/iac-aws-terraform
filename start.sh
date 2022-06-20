@@ -10,5 +10,4 @@ if [ $? = 1 ]; then
 fi
 
 # verificar dependencias (terraform, aws cli, jq)
-# terraform init
 # opções (deploy, update, delete)

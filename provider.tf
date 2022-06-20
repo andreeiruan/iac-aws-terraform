@@ -6,16 +6,16 @@ terraform {
     }
   }
 
-  backend "s3" {
-    bucket = "beta-test-infra"
-    key    = "codox/terraform.tfstate"
-    region = "us-west-1"
-    dynamodb_table = "test-codox"
-    profile = "ezops"
+  backend "s3" { // todo: Dynamic
+    bucket = "beta-test-infra" 
+    key    = "codox/terraform.tfstate" 
+    region = "us-west-1" 
+    dynamodb_table = "test-codox" 
+    profile = "ezops" 
   }
 }
 
-provider "aws" {
+provider "aws" { // todo: Dynamic
   profile = "ezops"
   region  = var.region
 }

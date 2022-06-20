@@ -14,9 +14,13 @@ variable "major_version" {
   
 }
 
-variable "site_priority" {
+# variable "site_priority_green" {
   
-}
+# }
+
+# variable "site_priority_blue" {
+  
+# }
 
 variable "vpc_id" {
   type = string

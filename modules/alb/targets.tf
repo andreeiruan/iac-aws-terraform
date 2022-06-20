@@ -6,7 +6,7 @@ resource "aws_lb_target_group" "target_blue" {
   protocol    = "HTTP"
 
   health_check {
-    matcher             = "200"
+    matcher             = "200-499"
     path                = "/"
     interval            = 5
     protocol            = "HTTP"
@@ -25,7 +25,7 @@ resource "aws_lb_target_group" "target_green" {
   protocol    = "HTTP"
 
   health_check {
-    matcher             = "200"
+    matcher             = "200-499"
     path                = "/"
     interval            = 5
     protocol            = "HTTP"
@@ -37,20 +37,20 @@ resource "aws_lb_target_group" "target_green" {
 }
 
 
-resource "aws_lb_target_group" "default_target_group" {
-  name     = "i-${var.service_name}-${var.major_version}-default"
-  vpc_id   = data.aws_vpc.vpc.id
-  port     = 80
-  protocol = "HTTP"
+# resource "aws_lb_target_group" "default_target_group" {
+#   name     = "i-${var.service_name}-${var.major_version}-default"
+#   vpc_id   = data.aws_vpc.vpc.id
+#   port     = 80
+#   protocol = "HTTP"
 
-  health_check {
-    matcher             = "301"
-    path                = "/"
-    interval            = 10
-    protocol            = "HTTP"
-    timeout             = 5
-    healthy_threshold   = 3
-    unhealthy_threshold = 3
-  }
-}
+#   health_check {
+#     matcher             = "301"
+#     path                = "/"
+#     interval            = 10
+#     protocol            = "HTTP"
+#     timeout             = 5
+#     healthy_threshold   = 3
+#     unhealthy_threshold = 3
+#   }
+# }
 

@@ -2,19 +2,19 @@ variable "canary_interval" {}
 
 variable "canary_percentage" {}
 
-# variable "blue_listener_https_arn" {
-#   default = ""
-# }
+variable "blue_listener_https_arn" {
+  default = ""
+}
 
-# variable "blue_listener_http_arn" {}
+variable "blue_listener_http_arn" {}
 
 variable "target_blue_arn" {}
 
 variable "target_green_arn" {}
 
-# variable "green_listener_http_arn" {}
+variable "green_listener_http_arn" {}
 
-variable "listener_https" {}
+# variable "listener_https" {}
 
 variable "canary_cleanup_timeout" {}
 
