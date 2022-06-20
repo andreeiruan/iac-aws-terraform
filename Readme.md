@@ -1,23 +1,46 @@
-### requisitos
-Terraform version v1.1.7 or greater
-https://learn.hashicorp.com/tutorials/terraform/install-cli
+<h1 align="center">Iac-aws-terraform</h1>
 
-Docker runtime
+<h2 align="left">Prerequisites</h2>
 
-JQ in linux
+* [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
 
-AWS CLI v2.4.39 or greater
+* [Docker runtime](https://docs.docker.com/engine/install/)
 
-SO Linux
+* [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html#getting-started-instal-instructions)
+
+* [JQ in linux](https://stedolan.github.io/jq/download/)
+
+<h2 align="left">To deploy</h2>
+
+* It is necessary to install all the dependencies mentioned above;
+
+* After all the dependencies installed, configure the aws cli the credentials of the account in which you want to create the resources;
+
+* After that, create an s3 bucket or use an existing one to save the state of the infrastructure that terraform will use to manage the state of the resources, this configuration is in the provider.tf file, this bucket must be in the account that the resources will be implanted;
+
+* Analyze the **terraform.tfvars** file, this file is where we define some global scope variables, look at the variables and configure according to your use;
+
+    <h3 align="left">some variables</h1>
+        
+     * region: AWS Region to create the resources
+     * docker_image_local: Name of the local image that will be deployed
+     * docker_image_tag: Tag of the local image that will be deployed
+     * dns_hosted_zone: The DNS zone that will be used, the account must have a hosted zone already created
+        
+
+* After all this previously configured, run the **deploy.sh** script that will create the infrastructure, if there is an error, the resources that were created up to the time of the error will be deleted from the account.
 
 
-### Como usar 
-é necessário instalar as dependencias citadas a cima
+<h2 align="left">Some resources</h2>
 
-Após todas as dependencias instaladas, configure a aws cli com um profile com as credencias da conta em que você deseja criar os recursos
+Some resources created are:
 
-Após isso crie um bucket s3 ou use um já existente para salvar o estado da infra que o terraform irá usar para gerenciar o estado dos recursos
+* A VPC network with two public and two private subnets to keep anything private safe from public access
 
-Analise o arquivo terraforn.tfvars, este arquivo é onde definimos algumas variaveis de escopo global, olhe as variaveis e configure conforme seu uso
+* One queue in AWS SQS
 
-Após tudo isso configurado, execute o script start.sh que irá criar a infra caso houver algum erro, os recursos que foram criados até o momento do erro serão deletados da conta
+* One application-type load balancer for each service
+
+* An ECS Cluster for each service, a repository is created in AWS ECR for the docker images, after the creation of AWS ECR the local image is pushed to the ECR
+
+* A Repository in AWS CodeCommit, where the necessary files are also automatically uploaded for AWS Code Deploy to work well with the Blue/Green type

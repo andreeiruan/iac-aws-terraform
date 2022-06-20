@@ -1,4 +1,4 @@
-resource "aws_s3_bucket" "codepipeline_bucket" { 
+resource "aws_s3_bucket" "codepipeline_bucket" {
   bucket = "i-${var.env}-${var.infra_version}-${var.service_name}-${var.major_version}-bucket-pipeline"
 
   provisioner "local-exec" {
@@ -9,17 +9,18 @@ resource "aws_s3_bucket" "codepipeline_bucket" {
       EXEC_TASK_ROLE_ARN = var.exec_task_role_arn
       CONTAINER_NAME     = var.container_name
       TASK_FAMILY        = var.task_family
+      AWS_REGION         = data.aws_region.current.name
     }
   }
 
   provisioner "local-exec" {
-    command = "/bin/sh -c ./scripts/empty-bucket.sh" 
-    when = "destroy"
+    command = "/bin/sh -c ./scripts/empty-bucket.sh"
+    when    = "destroy"
 
 
     environment = {
       BUCKET_NAME = self.id
-     }   
+    }
   }
 }
 

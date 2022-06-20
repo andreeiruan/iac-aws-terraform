@@ -1,7 +1,7 @@
 resource "aws_launch_configuration" "as_conf" {
   iam_instance_profile        = aws_iam_instance_profile.instance_profile.id
-  key_name                    = var.keypair_name
-  image_id                    = var.ecs_image_id
+  # key_name                    = var.keypair_name
+  image_id                    = data.aws_ami.ecs_ami.image_id
   security_groups             = [var.security_group_internal]
   instance_type               = var.instance_type
   associate_public_ip_address = false

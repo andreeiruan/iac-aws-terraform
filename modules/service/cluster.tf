@@ -1,4 +1,10 @@
 resource "aws_ecs_cluster" "cluster" {
+  depends_on = [
+    aws_ecr_repository.repository,
+    aws_codecommit_repository.artifact_store
+  ]
+
+  
   name = "i-${var.env}-${var.infra_version}-${var.service_name}-${var.major_version}"
 
   setting {
@@ -7,7 +13,7 @@ resource "aws_ecs_cluster" "cluster" {
   }
 }
 
-resource "aws_ecs_capacity_provider" "capacity" { 
+resource "aws_ecs_capacity_provider" "capacity" {   
   name = "i-${var.env}-${var.infra_version}-${var.service_name}-${var.major_version}-cp"
 
   auto_scaling_group_provider {

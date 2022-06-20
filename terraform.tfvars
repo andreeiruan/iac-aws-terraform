@@ -1,10 +1,11 @@
-region             = "us-east-1"
+region             = "<SET AWS REGION>"
 blue_port          = 80
 green_port         = 8080
 use_https          = true
 docker_image_local = "nginx"
 docker_image_tag   = "latest"
-infra_version      = "one"
+infra_version      = "1"
 env                = "dev"
-service_name       = "test-codox"
-major_version      = "one"
+service_name       = "<SET SERVICE NAME>"
+major_version      = "1"
+dns_hosted_zone    = "<SET HOSTED ZONE>"

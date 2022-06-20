@@ -17,7 +17,7 @@ resource "aws_codecommit_repository" "artifact_store" {
       AWS_REGION         = data.aws_region.current.name
       IMAGE_LOCAL        = "${var.docker_image_local}:${var.docker_image_tag}"
       ECR_REPOSITORY_URI = aws_ecr_repository.repository.repository_url
-      ECR_REGISTRY_ID    = aws_ecr_repository.repository.registry_id
+      ECR_REGISTRY_ID    = aws_ecr_repository.repository.registry_id      
     }
   }
 }

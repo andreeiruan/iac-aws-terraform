@@ -12,7 +12,7 @@ module "alb" {
   service_name               = var.service_name
   vpc_id                     = module.vpc.vpc_id
   public_subnets             = [module.vpc.subnet_public_one_id, module.vpc.subnet_public_two_id]
-  hosted_zone_domain         = "dev.ezops.com.br"
+  hosted_zone_domain         = var.dns_hosted_zone
   security_group_internal_id = module.vpc.sg_allow_internal_access_id
   blue_port                  = var.blue_port
   green_port                 = var.green_port
@@ -37,9 +37,9 @@ module "redis" {
 }
 
 module "service" {
-  source                  = "./modules/service"
-  keypair_name            = "beta-treinamentos"
-  ecs_image_id            = "ami-022ed07b73d6b46b2"
+  source = "./modules/service"
+  # keypair_name            = ""
+  # ecs_image_id            = "ami-022ed07b73d6b46b2"
   security_group_internal = module.vpc.sg_allow_internal_access_id
   instance_type           = "t3a.medium"
   asg_min_instances       = 1
@@ -55,7 +55,7 @@ module "service" {
   memory_container        = 256
   blue_port               = var.blue_port
   green_port              = var.green_port
-  ecs_node_volume_size    = 30
+  ecs_node_volume_size    = 30  
   # docker_image_local      = "sqsproducer"
   # docker_image_tag        = "latest"
   docker_image_local = var.docker_image_local
@@ -91,7 +91,7 @@ module "code_deploy" {
   green_listener_http_arn    = module.alb.green_listener_http_arn
   ecr_repository_name        = module.service.ecr_repository_name
   use_https                  = var.use_https
-  codecommit_repository_name = module.service.codecommit_repository_name
+  codecommit_repository_name = module.service.codecommit_repository_name  
   # listener_https         = module.alb.listener_https
 }
 
@@ -115,20 +115,18 @@ module "alb_two" {
   service_name               = "${var.service_name}-pv"
   vpc_id                     = module.vpc.vpc_id
   public_subnets             = [module.vpc.subnet_public_one_id, module.vpc.subnet_public_two_id]
-  hosted_zone_domain         = "dev.ezops.com.br"
+  hosted_zone_domain         = var.dns_hosted_zone
   security_group_internal_id = module.vpc.sg_allow_internal_access_id
   blue_port                  = var.blue_port
   green_port                 = var.green_port
   use_https                  = var.use_https
-  # site_priority_blue         = 1
-  # site_priority_green        = 2
   subdomain = "consumer.test-codox"
 }
 
 module "service_private" {
-  source                  = "./modules/service"
-  keypair_name            = "beta-treinamentos"
-  ecs_image_id            = "ami-022ed07b73d6b46b2"
+  source = "./modules/service"
+  # keypair_name            = "" 
+  # ecs_image_id            = "ami-022ed07b73d6b46b2"
   security_group_internal = module.vpc.sg_allow_internal_access_id
   instance_type           = "t3a.medium"
   asg_min_instances       = 1
@@ -153,7 +151,7 @@ module "service_private" {
   infra_version      = var.infra_version
   major_version      = var.major_version
   service_name       = "${var.service_name}-two"
-  queue_url          = module.sqs_queue.queue_url
+  queue_url          = module.sqs_queue.queue_url  
 }
 
 module "code_deploy_private" {
@@ -180,7 +178,7 @@ module "code_deploy_private" {
   green_listener_http_arn    = module.alb_two.green_listener_http_arn
   use_https                  = var.use_https
   ecr_repository_name        = module.service_private.ecr_repository_name
-  codecommit_repository_name = module.service_private.codecommit_repository_name
+  codecommit_repository_name = module.service_private.codecommit_repository_name  
   # networw_lb                 = true
   # listener_https             = module.alb_two.listener_https
 }

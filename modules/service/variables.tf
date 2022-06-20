@@ -1,6 +1,6 @@
-variable "keypair_name" {}
+# variable "keypair_name" {}
 
-variable "ecs_image_id" {}
+# variable "ecs_image_id" {}
 
 variable "security_group_internal" {}
 

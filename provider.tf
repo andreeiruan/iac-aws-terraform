@@ -13,13 +13,9 @@ terraform {
     key    = "OBJECT NAME" 
     // here will put AWS region
     region = "us-west-1"
-    // here will put profile name configured with AWS cli
-    profile = "ezops" 
   }
 }
 
-provider "aws" { // todo: Dynamic
-  // here will put profile name configured with AWS cli
-  profile = "ezops"
+provider "aws" { 
   region  = var.region
 }

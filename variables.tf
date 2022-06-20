@@ -7,6 +7,10 @@ variable "service_name" {
   type = string
 }
 
+variable "dns_hosted_zone" {
+  type = string
+}
+
 variable "major_version" {
   type = string
 }
